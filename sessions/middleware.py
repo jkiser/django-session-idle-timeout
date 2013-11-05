@@ -7,7 +7,8 @@ from django.shortcuts import redirect
 from django.contrib.sites.models import get_current_site
 
 from pras.settings.base import SESSION_IDLE_TIMEOUT, SESSION_TIMED_OUT_URL
-from accounts import cosign_logout
+from utils import cosign_logout
+
 
 class SessionIdleTimeout:
     """Middleware class to timeout a session after a specified time period.
