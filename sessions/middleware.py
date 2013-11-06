@@ -5,9 +5,9 @@ from django.contrib import messages
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.contrib.sites.models import get_current_site
+from django.conf import settings
 
-from pras.settings.base import SESSION_IDLE_TIMEOUT, SESSION_TIMED_OUT_URL
-from utils import cosign_logout
+from accounts.utils import cosign_logout
 
 
 class SessionIdleTimeout:
@@ -23,18 +23,18 @@ class SessionIdleTimeout:
             # Timeout if idle time period is exceeded.
             if request.session.has_key('last_activity') and \
                 (current_datetime - request.session['last_activity']).seconds > \
-                SESSION_IDLE_TIMEOUT:
+                settings.SESSION_IDLE_TIMEOUT:
                 cosign_logout(request)
                 messages.add_message(request, messages.ERROR, 'Your session has been timed out.')
                 self.requested_path = request.path
-                return redirect(SESSION_TIMED_OUT_URL)
+                return redirect(settings.SESSION_TIMED_OUT_URL)
             # Set last activity time in current session.
             else:
                 request.session['last_activity'] = current_datetime
         return None
 
     def process_template_response(self, request, response):
-        if request.path == SESSION_TIMED_OUT_URL:
+        if request.path == settings.SESSION_TIMED_OUT_URL:
             current_site = get_current_site(request)
             current_app = "accounts"
             template_name = "registration/timed_out.html"
