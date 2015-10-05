@@ -29,4 +29,3 @@ class SessionIdleTimeout:
             else:
                 request.session['last_activity'] = current_datetime
         return None
-
